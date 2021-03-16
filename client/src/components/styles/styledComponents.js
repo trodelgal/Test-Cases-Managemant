@@ -39,7 +39,7 @@ export const TitleWrapper = styled.div`
 export const Wrapper = styled.div`
   margin: ${(props) =>
     props.margin ? props.margin : "5% auto"};
-  width: 80%;
+  width: 90%;
   padding: ${(props) =>
     props.padding ? props.padding : "40px"};
   border-radius: 7px;

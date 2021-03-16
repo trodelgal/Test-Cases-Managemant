@@ -103,6 +103,32 @@ const AddTest = () => {
               <br />
               <br />
               <TextField
+                id="sprint"
+                name="sprint"
+                inputRef={register({
+                  required: "sprint is required",
+                })}
+                label="Sprint"
+              />
+              {!empty ? (
+                errors.sprint ? (
+                  <Tooltip title={errors.sprint.message}>
+                    <IconButton style={{ cursor: "default" }}>
+                      <ErrorOutlineIcon
+                        style={{ width: "30px", height: "30px" }}
+                        color="error"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <IconButton style={{ cursor: "default" }}>
+                    <DoneIcon color="action" />
+                  </IconButton>
+                )
+              ) : null}
+              <br />
+              <br />
+              <TextField
                 id="description"
                 multiline
                 fullWidth

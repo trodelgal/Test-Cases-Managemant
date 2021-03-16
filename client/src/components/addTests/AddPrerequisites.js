@@ -1,123 +1,58 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
-import network from "../../helpers/network";
+import React, { useState } from "react";
+import Axios from "axios";
+import { useForm } from "react-hook-form";
 import {
-  H1,
   Wrapper,
-  TitleWrapper,
   Center,
-  GridDiv,
-} from "../../styles/styledComponents";
-import {
-    validEmailRegex,
-  } from "../../helpers/patterns";
-import "react-loading-wrapper/dist/index.css";
-import { useForm, Controller } from "react-hook-form";
-import DoneIcon from "@material-ui/icons/Done";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import { useHistory } from "react-router-dom";
-import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import AdminNavBar from "./AdminNavBar";
+  H1,
+} from "../styles/styledComponents";
+import { Button, TextField, Modal } from "@material-ui/core";
+import { useParams } from "react-router-dom";
 
-const AddClient = () => {
-  const { register, handleSubmit, errors, control } = useForm();
-  const currentBusiness = useSelector((state) => state.currentBusiness);
-  const history = useHistory();
+export default function AddPrerequisite({added}) {
+  const [open, setOpen] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
+  const { id } = useParams();
 
-  const empty = useMemo(() => Object.keys(errors).length === 0, [errors]);
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  const onSubmit = async (data) => {
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  const onSubmit = async (stepData) => {
     try {
-        data.businessId =  currentBusiness.id
-        console.log(data);
-      const res = await network.post("/api/V1/user/", data);
-      Swal.fire("Success!", "", "success");
-      history.push(`/clients`);
+      stepData.testId = id;
+      console.log(stepData)
+      const { data } = await Axios.post("/api/prerequisite/", stepData);
+      handleClose()
+      added()
     } catch (error) {
-      Swal.fire("Error Occurred", error.message, "error");
+      alert(error)
     }
   };
 
-  return (
-    <>
-      <AdminNavBar />
-      <Wrapper>
-        <Center>
-          <TitleWrapper>
-            <H1>Add Client</H1>
-          </TitleWrapper>
-          <form onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <br />
-                <TextField
-                  id="name"
-                  name="username"
-                  inputRef={register({
-                    required: "Name is required",
-                    minLength: {
-                      value: 2,
-                      message: "Full Name needs to be a minimum of 2 letters",
-                    },
-                  })}
-                  label="Full Name"
-                />
-                {!empty ? (
-                  errors.username ? (
-                    <Tooltip title={errors.username.message}>
-                      <IconButton style={{ cursor: "default" }}>
-                        <ErrorOutlineIcon
-                          style={{ width: "30px", height: "30px" }}
-                          color="error"
-                        />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <IconButton style={{ cursor: "default" }}>
-                      <DoneIcon color="action" />
-                    </IconButton>
-                  )
-                ) : null}
-                <br />
-              </div>
-              <div>
-                <br />
-                <TextField
-                  id="email"
-                  name="email"
-                  inputRef={register({
-                    required: "Email is required",
-                    pattern: {
-                        value: validEmailRegex,
-                        message: "Please Enter a Valid Email",
-                      },
-                  })}
-                  label="Email"
-                />
-                {!empty ? (
-                  errors.email ? (
-                    <Tooltip title={errors.email.message}>
-                      <IconButton style={{ cursor: "default" }}>
-                        <ErrorOutlineIcon
-                          style={{ width: "30px", height: "30px" }}
-                          color="error"
-                        />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <IconButton style={{ cursor: "default" }}>
-                      <DoneIcon color="action" />
-                    </IconButton>
-                  )
-                ) : null}
-                <br />
-              </div>
-            <br />
-            <br />
-            <Button
+  const body = (
+    <Wrapper>
+      <Center>
+        <H1>Add data</H1>
+        <br/>
+        <br/>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            style={{ minWidth: 270 }}
+            id="Description"
+            label="Description"
+            inputRef={register({
+              required: "Description is required",
+            })}
+            name="description"
+          />
+          {generateBrs(2)}
+          <Button
               id="submitButton"
               variant="contained"
               color="primary"
@@ -125,11 +60,27 @@ const AddClient = () => {
             >
               Submit
             </Button>
-          </form>
-        </Center>
-      </Wrapper>
+        </form>
+      </Center>
+    </Wrapper>
+  );
+
+  return (
+    <>
+      <Button onClick={handleOpen} variant="contained" color="secondary">
+        +
+      </Button>
+      <Modal open={open} onClose={handleClose}>
+        {body}
+      </Modal>
     </>
   );
-};
+}
 
-export default AddClient;
+const generateBrs = (num) => {
+  const arrOfSpaces = [];
+  for (let i = 0; i < num; i++) {
+    arrOfSpaces.push(<br />);
+  }
+  return arrOfSpaces;
+};

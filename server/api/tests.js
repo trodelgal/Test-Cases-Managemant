@@ -8,7 +8,23 @@ const router = Router();
 router.get('/', async (req, res)=>{
   try{
     const allTests = await Test.findAll({
-      includes:[{
+      include:[{
+        model:Step,
+        attributes:["id"]
+      }]
+    });
+    return res.json(allTests);
+  }catch(err){
+    return res.json(err)
+  }
+});
+
+// get one the tests with the details
+router.get('/:id', async (req, res)=>{
+  try{
+    const allTests = await Test.findOne({
+      where:{id:req.params.id},
+      include:[{
         model:Step
       },{
         model:Data
@@ -16,6 +32,7 @@ router.get('/', async (req, res)=>{
         model:Perequisite
       }]
     });
+
     return res.json(allTests);
   }catch(err){
     return res.json(err)

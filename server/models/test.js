@@ -26,9 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     writer: DataTypes.STRING,
     description: DataTypes.STRING,
     testDate: DataTypes.STRING,
-    pass: DataTypes.BOOLEAN,
-    hapend: DataTypes.BOOLEAN,
+    pass: DataTypes.STRING,
+    hapend: DataTypes.STRING,
     feature: DataTypes.STRING,
+    sprint: DataTypes.STRING,
     appLocation: DataTypes.STRING,
     environment: DataTypes.STRING,
     automatic: DataTypes.BOOLEAN

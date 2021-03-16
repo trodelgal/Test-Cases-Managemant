@@ -24,14 +24,15 @@ module.exports = {
         type: Sequelize.DATE
       },
       pass: {
-        type: Sequelize.BOOLEAN,
-        default: 0,
+        type: Sequelize.STRING,
       },
       hapend: {
-        type: Sequelize.BOOLEAN,
-        default: 0,
+        type: Sequelize.STRING,
       },
       feature: {
+        type: Sequelize.STRING
+      },
+      sprint: {
         type: Sequelize.STRING
       },
       app_location: {
